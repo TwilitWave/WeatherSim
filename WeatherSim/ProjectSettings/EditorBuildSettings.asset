@@ -9,6 +9,11 @@ EditorBuildSettings:
     path: 
     guid: 00000000000000000000000000000000
   - enabled: 1
+<<<<<<< HEAD
     path: Assets/_Scenes/Test/drag and drop.unity
     guid: 724f410b1e4e7bf438aa9d7f340b7245
+=======
+    path: Assets/_Scenes/Drew/setup.unity
+    guid: e5f51fc808d0f674a8a4c3ae7012cbad
+>>>>>>> master
   m_configObjects: {}
