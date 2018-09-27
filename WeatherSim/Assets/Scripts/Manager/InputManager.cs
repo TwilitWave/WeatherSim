@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour {
+public class InputManager : MonoBehaviour
+{
 
     public static InputManager instance;
     private void Awake()
     {
-        if (instance == null || instance!=this)
+        if (instance == null || instance != this)
         {
             instance = this;
         }
@@ -23,22 +24,32 @@ public class InputManager : MonoBehaviour {
     float f_scaleThreshold = 2f;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         InteractingObj = null;
 
     }
-	
-	// Update is called once per frame
-	void Update () {
-        List<Touch> touches = InputHelper.GetTouches();
 
+    // Update is called once per frame
+    void Update()
+    {
+
+        List<Touch> touches = InputHelper.GetTouches();
         if (touches.Count > 0)
         {
             foreach (Touch touch in touches)
             {
                 Vector3 touchedPos = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, 10));
+                RaycastHit2D hit2D = Physics2D.Raycast(touchedPos, Camera.main.transform.forward);
+                if (hit2D.collider != null && hit2D.transform.GetComponent<Interactable>() != null)
+                {
+                    // assign current interactable obj
+                    InteractingObj = hit2D.transform.GetComponent<Interactable>();
+                    InteractingObj.b_Touched = true;
+                }
                 switch (touch.phase)
                 {
+
                     case TouchPhase.Began:
                         {
                             if (i_touchCount < 2)
@@ -47,19 +58,13 @@ public class InputManager : MonoBehaviour {
                                 i_touchCount++;
                             }
 
+                            InteractingObj.AssignTouch(touch);
 
-                            RaycastHit2D hit2D = Physics2D.Raycast(touchedPos, Camera.main.transform.forward);
-                            if (hit2D.collider != null && hit2D.transform.GetComponent<Interactable>()!=null)
-                            {
-                                // assign current interactable obj
-                                InteractingObj = hit2D.transform.GetComponent<Interactable>();
-                                InteractingObj.AssignTouch(touch);
-                            }
                             break;
                         }
                     case TouchPhase.Moved:
                         {
-
+                            InteractingObj.SetPosition(touch.position);
                             break;
                         }
                     case TouchPhase.Ended:
@@ -67,6 +72,8 @@ public class InputManager : MonoBehaviour {
                             l_doubleTouchMovements.Remove(touch);
                             i_touchCount--;
 
+                            InteractingObj.RemoveTouch(touch);
+                            InteractingObj.b_Touched = false;
                             InteractingObj = null;
                             break;
                         }
@@ -75,7 +82,7 @@ public class InputManager : MonoBehaviour {
             }
         }
 
-        if(i_touchCount == 2)
+        if (i_touchCount == 2)
         {
             // assign old distance
             fa_distATouches[0] = fa_distATouches[1];
@@ -84,11 +91,11 @@ public class InputManager : MonoBehaviour {
             float deltaDist = fa_distATouches[1] - fa_distATouches[0];
 
             // scale up
-            if(deltaDist > 0 && deltaDist> f_scaleThreshold)
+            if (deltaDist > 0 && deltaDist > f_scaleThreshold)
             {
                 Debug.Log("Call scale up");
             }
-            if(deltaDist < 0 && deltaDist < -f_scaleThreshold)
+            if (deltaDist < 0 && deltaDist < -f_scaleThreshold)
             {
                 Debug.Log("Call scale down");
             }
@@ -101,5 +108,5 @@ public class InputManager : MonoBehaviour {
             fa_distATouches[0] = 0;
             fa_distATouches[1] = 0;
         }
-}
+    }
 }

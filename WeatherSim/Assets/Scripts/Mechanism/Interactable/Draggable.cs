@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Draggable : Interactable {
 
-    public bool b_Touched;
+    
 	// Use this for initialization
 	void Start () {
 		
@@ -12,8 +12,14 @@ public class Draggable : Interactable {
 	
 	// Update is called once per frame
 	void Update () {
-       
+
+        if (b_Touched)
+        {
             
+            Vector3 pos = Camera.main.ScreenToWorldPoint(v_onScreenPos[0]);
+            pos.z = 0;
+            transform.position = pos;
+        }
         
     }
 }
