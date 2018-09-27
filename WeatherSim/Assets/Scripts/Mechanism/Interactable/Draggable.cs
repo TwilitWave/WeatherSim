@@ -14,12 +14,15 @@ public class Draggable : Interactable {
     float f_currDist;
     float f_preDist;
 
+    float ScreenWidth;
+    float ScreenHeight;
+
     // difference from center to pointer
     Vector3 v_diff = Vector3.zero;
 	// Use this for initialization
 	protected override void Start () {
         base.Start();
-
+        Debug.Log(Camera.main.orthographicSize);
     }
     public override void OnTouch()
     {
@@ -40,6 +43,16 @@ public class Draggable : Interactable {
                 Vector3 pos = Camera.main.ScreenToWorldPoint(v_onScreenPos[0]);
                 pos.z = 0;
                 transform.position = pos - v_diff;
+
+                if (transform.position.y > Camera.main.orthographicSize)
+                    transform.position = new Vector3(transform.position.x, Camera.main.orthographicSize, 0);
+                if (transform.position.y < -Camera.main.orthographicSize)
+                    transform.position = new Vector3(transform.position.x, -Camera.main.orthographicSize, 0);
+                if (transform.position.x > Camera.main.orthographicSize * Camera.main.aspect)
+                    transform.position = new Vector3( Camera.main.orthographicSize * Camera.main.aspect,transform.position.y, 0);
+                if (transform.position.x < -Camera.main.orthographicSize * Camera.main.aspect)
+                    transform.position = new Vector3( -Camera.main.orthographicSize * Camera.main.aspect, transform.position.y, 0);
+
             }
             // can not scale
             if (b_CanScaleUp)
