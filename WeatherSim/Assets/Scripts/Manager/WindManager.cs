@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WindManager : MonoBehaviour {
-    public enum Direction {LEFT, RIGHT,DEFAULT};
-    public bool b_CanGenerateWind;
-    private Direction direction;
-    private float Scale;
     public static WindManager instance;
+
+    public bool b_CanGenerateWind;
+    // right: 1, left: -1
+    public int direction;
+
+    public bool b_blowing;
+    public float f_acceleraton;
+    public float Scale;
+    
 
     LineRenderer lr_PathOfWind;
 
@@ -22,20 +27,13 @@ public class WindManager : MonoBehaviour {
     private void Start()
     {
         Scale = 0;
-        direction = Direction.DEFAULT;
+        direction = 0;
         lr_PathOfWind = transform.GetChild(0).GetComponent<LineRenderer>();
         lr_PathOfWind.enabled = false;
     }
-    public Direction GetDirection()
-    {
-        return direction;
-    }
-    public float GetScale()
-    {
-        return Scale;
-    }
-    public void SetWind(Direction direction, float Scale) {
 
+    public void SetWind(int direction, float Scale) {
+        b_blowing = true;
         this.Scale = Scale;
         this.direction = direction;
         Debug.Log("Scale: " + Scale);
@@ -70,13 +68,25 @@ public class WindManager : MonoBehaviour {
                                 //lr_PathOfWind.enabled = false;
                                 float delta = lr_PathOfWind.GetPosition(1).x - lr_PathOfWind.GetPosition(0).x;
                                 // set wind
-                                SetWind(delta > 0 ? Direction.RIGHT : Direction.LEFT, Mathf.Abs(delta));
+                                SetWind(delta > 0 ? 1 : -1, Mathf.Abs(delta));
                                 break;
                             }
                         default:
                             break;
                     }
                 }
+            }
+        }
+
+        if (b_blowing)
+        {
+            
+            Scale -= Time.deltaTime * f_acceleraton;
+            if(Scale < 0)
+            {
+                // wind stop
+                Scale = 0;
+                b_blowing = false;
             }
         }
     }
