@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4651892318652004}
   - component: {fileID: 33997438264229836}
   - component: {fileID: 23145466727522930}
+  - component: {fileID: 114974406798335124}
   m_Layer: 0
   m_Name: Water
   m_TagString: Untagged
@@ -83,3 +84,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1225147268131592}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114974406798335124
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1225147268131592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c6e8dd5d85e3d446ac8b87d1508a243, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  temperature: 1
+  cunrrenttemp: 1
+  heatspeed: 1

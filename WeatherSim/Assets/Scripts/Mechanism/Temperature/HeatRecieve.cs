@@ -22,12 +22,11 @@ public class HeatRecieve : MonoBehaviour {
             deltatemp = temperature * speadconst * ((temperature - cunrrenttemp)/Mathf.Abs(temperature-cunrrenttemp))*Time.deltaTime*heatspeed;
             cunrrenttemp += deltatemp;
         }
-        Debug.Log(cunrrenttemp);
 	}
     private void Getexpand() {
         this.heatspeed = 1/gameObject.transform.localScale.y;
     }
     public static float DistanceSquare(float x1, float y1, float x2, float y2) {
-        return Mathf.Pow((x2 - x1), 2) + Mathf.Pow((y2 - y1), 2);
+        return Mathf.Sqrt(Mathf.Pow((x2 - x1), 2)) + Mathf.Pow((y2 - y1), 2);
     }
 }
