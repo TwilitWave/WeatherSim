@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Drew/setup.unity
     guid: e5f51fc808d0f674a8a4c3ae7012cbad
+  - enabled: 1
+    path: Assets/_Scenes/TestScene_Boson.unity
+    guid: efda200c17d80ac4d85a2308be7f5e8c
   m_configObjects: {}
