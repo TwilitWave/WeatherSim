@@ -15,11 +15,6 @@ public class InputManager : MonoBehaviour
     }
     public Interactable InteractingObj;
 
-    int i_touchCount;
-    List<Touch> l_doubleTouchMovements = new List<Touch>();
-    // store the previous and current distance among two finger
-    float[] fa_distATouches = { 0, 0 };
-
     [SerializeField]
     float f_scaleThreshold = 2f;
 
@@ -47,66 +42,41 @@ public class InputManager : MonoBehaviour
                     InteractingObj = hit2D.transform.GetComponent<Interactable>();
                     InteractingObj.b_Touched = true;
                 }
-                switch (touch.phase)
+                if(InteractingObj != null)
                 {
+                    switch (touch.phase)
+                    {
 
-                    case TouchPhase.Began:
-                        {
-                            if (i_touchCount < 2)
+                        case TouchPhase.Began:
                             {
-                                l_doubleTouchMovements.Add(touch);
-                                i_touchCount++;
+
+                                InteractingObj.AssignTouch(touch);
+                                InteractingObj.SetPosition(touch);
+                                InteractingObj.OnTouch();
+                                break;
+                            }
+                        case TouchPhase.Moved:
+                            {
+                                InteractingObj.SetPosition(touch);
+                                InteractingObj.OnStay();
+                                break;
+                            }
+                        case TouchPhase.Ended:
+                            {
+                                InteractingObj.OnLeave();
+
+                                InteractingObj.RemoveTouch(touch.fingerId);
+                                InteractingObj.b_Touched = false;
+                                InteractingObj = null;
+                                break;
                             }
 
-                            InteractingObj.AssignTouch(touch);
-
-                            break;
-                        }
-                    case TouchPhase.Moved:
-                        {
-                            InteractingObj.SetPosition(touch.position);
-                            break;
-                        }
-                    case TouchPhase.Ended:
-                        {
-                            l_doubleTouchMovements.Remove(touch);
-                            i_touchCount--;
-
-                            InteractingObj.RemoveTouch(touch);
-                            InteractingObj.b_Touched = false;
-                            InteractingObj = null;
-                            break;
-                        }
-
+                    }
                 }
+              
             }
         }
 
-        if (i_touchCount == 2)
-        {
-            // assign old distance
-            fa_distATouches[0] = fa_distATouches[1];
-            // new distance
-            fa_distATouches[1] = Vector2.Distance(l_doubleTouchMovements[0].position, l_doubleTouchMovements[1].position);
-            float deltaDist = fa_distATouches[1] - fa_distATouches[0];
-
-            // scale up
-            if (deltaDist > 0 && deltaDist > f_scaleThreshold)
-            {
-                Debug.Log("Call scale up");
-            }
-            if (deltaDist < 0 && deltaDist < -f_scaleThreshold)
-            {
-                Debug.Log("Call scale down");
-            }
-
-        }
-        else
-        {
-            // reset all
-            l_doubleTouchMovements.Clear();
-            fa_distATouches[0] = 0;
-            fa_distATouches[1] = 0;
-        }
+      
     }
 }
