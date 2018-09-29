@@ -5,15 +5,20 @@ using UnityEngine;
 public class WindManager : MonoBehaviour {
     public static WindManager instance;
 
+    // If player can generate wind
     public bool b_CanGenerateWind;
-    // right: 1, left: -1
+    // The direction of wind right: 1, left: -1
     public int direction;
-
-    public bool b_blowing;
-    public float f_acceleraton;
+    // The force of Wind
     public float Scale;
-    
 
+    // if there is a wind
+    public bool b_blowing;
+    // The drop down speed of Scale
+    public float f_acceleraton;
+
+    
+    // The drawing hint of wind
     LineRenderer lr_PathOfWind;
 
     private void Awake()
@@ -42,38 +47,45 @@ public class WindManager : MonoBehaviour {
 
     private void Update()
     {
-        if (b_CanGenerateWind)
+        if (b_CanGenerateWind && !b_blowing)
         {
             List<Touch> touches = InputHelper.GetTouches();
+
             if (touches.Count > 0)
             {
                 foreach (Touch touch in touches)
                 {
-                    switch (touch.phase)
+                    Vector3 touchedPos = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, 10));
+                    RaycastHit2D hit2D = Physics2D.Raycast(touchedPos, Camera.main.transform.forward);
+                    if (hit2D.collider == null)
                     {
-                        case TouchPhase.Began:
-                            {
-                               
-                                lr_PathOfWind.SetPosition(0, new Vector3(Camera.main.ScreenToWorldPoint(touch.position).x, Camera.main.ScreenToWorldPoint(touch.position).y,0));
-                                lr_PathOfWind.enabled = true;
+                        switch (touch.phase)
+                        {
+                            case TouchPhase.Began:
+                                {
+
+                                    lr_PathOfWind.SetPosition(0, new Vector3(Camera.main.ScreenToWorldPoint(touch.position).x, Camera.main.ScreenToWorldPoint(touch.position).y, -1));
+                                    lr_PathOfWind.enabled = true;
+                                    break;
+                                }
+                            case TouchPhase.Moved:
+                                {
+                                    lr_PathOfWind.SetPosition(1, new Vector3(Camera.main.ScreenToWorldPoint(touch.position).x, Camera.main.ScreenToWorldPoint(touch.position).y, -1));
+                                    break;
+                                }
+                            case TouchPhase.Ended:
+                                {
+                                    //lr_PathOfWind.enabled = false;
+                                    float delta = lr_PathOfWind.GetPosition(1).x - lr_PathOfWind.GetPosition(0).x;
+                                    // set wind
+                                    SetWind(delta > 0 ? 1 : -1, Mathf.Abs(delta));
+                                    break;
+                                }
+                            default:
                                 break;
-                            }
-                        case TouchPhase.Moved:
-                            {
-                                lr_PathOfWind.SetPosition(1, new Vector3(Camera.main.ScreenToWorldPoint(touch.position).x, Camera.main.ScreenToWorldPoint(touch.position).y, 0));
-                                break;
-                            }
-                        case TouchPhase.Ended:
-                            {
-                                //lr_PathOfWind.enabled = false;
-                                float delta = lr_PathOfWind.GetPosition(1).x - lr_PathOfWind.GetPosition(0).x;
-                                // set wind
-                                SetWind(delta > 0 ? 1 : -1, Mathf.Abs(delta));
-                                break;
-                            }
-                        default:
-                            break;
+                        }
                     }
+                   
                 }
             }
         }
@@ -87,6 +99,7 @@ public class WindManager : MonoBehaviour {
                 // wind stop
                 Scale = 0;
                 b_blowing = false;
+                lr_PathOfWind.enabled = false;
             }
         }
     }
