@@ -20,6 +20,8 @@ public class Cloud : MonoBehaviour
     public float f_RainFullVolume;
     // current water volume for the cloud
     [SerializeField] private float f_WaterVolume;
+    private float f_rainSpeed = 5;
+    private bool b_isRaining;
 
     void Start()
     {
@@ -98,6 +100,26 @@ public class Cloud : MonoBehaviour
     }
     public void Rain()
     {
+        if (f_WaterVolume > 0)
+        {
 
+            f_WaterVolume -= f_rainSpeed;
+            float ratio = 1- (f_RainFullVolume - f_WaterVolume) / (f_RainFullVolume - f_CloudFullVolume);
+            if(ratio >= 0)
+                sr_FillCloud.material.SetFloat("_Fill", ratio);
+
+        }
+
+    }
+
+    public void Dissipate()
+    {
+        StartCoroutine(IEDissipate());
+
+    }
+    IEnumerator IEDissipate()
+    {
+        yield return new WaitForSeconds(2f);
+        gameObject.SetActive(false);
     }
 }
