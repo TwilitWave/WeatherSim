@@ -43,7 +43,7 @@ public class Draggable : Interactable {
                 Vector3 pos = Camera.main.ScreenToWorldPoint(v_onScreenPos[0]);
                 pos.z = 0;
                 transform.position = pos - v_diff;
-
+                  
                 if (transform.position.y > Camera.main.orthographicSize)
                     transform.position = new Vector3(transform.position.x, Camera.main.orthographicSize, 0);
                 if (transform.position.y < -Camera.main.orthographicSize)
@@ -70,8 +70,9 @@ public class Draggable : Interactable {
                         // scale up
                         if(transform.localScale.x < fa_scaleClamp[1])
                         {
-                            transform.localScale = new Vector3(1 + (speed * Time.deltaTime), 1 + (speed * Time.deltaTime), 1);
+                            transform.localScale = new Vector3(transform.localScale.x + (speed * Time.deltaTime), transform.localScale.y + (speed * Time.deltaTime), 1);
                         }
+                  
                     }
                     if (delta < 0 && delta < -f_scaleThreshold)
                     {
@@ -79,7 +80,7 @@ public class Draggable : Interactable {
 
                         if (transform.localScale.x > fa_scaleClamp[0])
                         {
-                            transform.localScale = new Vector3(1 + (speed * Time.deltaTime), 1 + (speed * Time.deltaTime), 1);
+                            transform.localScale = new Vector3(transform.localScale.x + (speed * Time.deltaTime), transform.localScale.y + (speed * Time.deltaTime), 1);
                         }
                     }
                 }
