@@ -22,7 +22,7 @@ public class Draggable : Interactable {
 	// Use this for initialization
 	protected override void Start () {
         base.Start();
-        Debug.Log(Camera.main.orthographicSize);
+
     }
     public override void OnTouch()
     {
@@ -72,7 +72,10 @@ public class Draggable : Interactable {
                         {
                             transform.localScale = new Vector3(transform.localScale.x + (speed * Time.deltaTime), transform.localScale.y + (speed * Time.deltaTime), 1);
                         }
-                  
+                        else
+                        {
+                            transform.localScale = new Vector3(fa_scaleClamp[1], fa_scaleClamp[1], 1);
+                        }
                     }
                     if (delta < 0 && delta < -f_scaleThreshold)
                     {
@@ -81,6 +84,10 @@ public class Draggable : Interactable {
                         if (transform.localScale.x > fa_scaleClamp[0])
                         {
                             transform.localScale = new Vector3(transform.localScale.x + (speed * Time.deltaTime), transform.localScale.y + (speed * Time.deltaTime), 1);
+                        }
+                        else
+                        {
+                            transform.localScale = new Vector3(fa_scaleClamp[0], fa_scaleClamp[0], 1);
                         }
                     }
                 }
