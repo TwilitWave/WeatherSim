@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Cloud : MonoBehaviour
 {
+    public int i_ID;
     [SerializeField] SpriteRenderer sr_FillCloud;
    SpriteRenderer sr_bgSprite;
     [SerializeField] private float f_WaterVolume;
@@ -27,10 +28,13 @@ public class Cloud : MonoBehaviour
     private float f_rainSpeed = 0.5f;
     private bool b_isRaining;
     private bool b_cloudDie;
-
-    void Start()
+    private void OnEnable()
     {
         sr_bgSprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
+    }
+    void Start()
+    {
+        
         sr_FillCloud.material.SetFloat("_Fill", 0f);
         if (!b_IsCloudFull)
         {
@@ -61,7 +65,7 @@ public class Cloud : MonoBehaviour
             if (dir < 0 && f_vertSpd > 0)
                 f_vertSpd = 0;
 
-            transform.position += new Vector3(f_vertSpd * Time.deltaTime, 0, 0);
+            transform.parent.position += new Vector3(f_vertSpd * Time.deltaTime, 0, 0);
         }
         else
         {
@@ -72,9 +76,21 @@ public class Cloud : MonoBehaviour
         Rain();
         Dissipate();
     }
-    public void InstantiateCloud()
-    {
+    public void InitCloud(Sprite _sprite)
+    {  
+        sr_bgSprite.sprite = _sprite;
+        sr_FillCloud.sprite = _sprite;
 
+        transform.parent.GetComponent<BoxCollider2D>().size = new Vector2(_sprite.rect.width*1.7f/280f, transform.parent.GetComponent<BoxCollider2D>().size.y);
+
+        transform.parent.position = new Vector3(12, Random.Range(1.2f,3.4f), 0);
+        //transform.localPosition = Vector3.zero;
+
+
+    }
+    public void MoveSlightly()
+    {
+        transform.parent.position += new Vector3(-0.5f,0,0) * Time.deltaTime;
     }
 
     public void GrowUp(float f_speed)
@@ -125,8 +141,7 @@ public class Cloud : MonoBehaviour
             else {
 
                 b_CanRain = false;
-                b_cloudDie = true;
-                StartCoroutine(IEDissipate());
+                CloudDie();
                 rainVFX.GetComponent<ParticleSystem>().Stop();
             }
         }
@@ -134,7 +149,13 @@ public class Cloud : MonoBehaviour
 
     }
 
-    public void Dissipate()
+    public void CloudDie()
+    {
+        b_cloudDie = true;
+        StartCoroutine(IEDissipate());
+    }
+
+    void Dissipate()
     {
         if (b_cloudDie && sr_bgSprite.color.a>0)
         {
@@ -146,8 +167,7 @@ public class Cloud : MonoBehaviour
     IEnumerator IEDissipate()
     {
         yield return new WaitForSeconds(2f);
-        Reset();
-        gameObject.SetActive(false);
+        CloudPool.instance.ReclycleCloud(i_ID);
     }
 
     public void Reset()

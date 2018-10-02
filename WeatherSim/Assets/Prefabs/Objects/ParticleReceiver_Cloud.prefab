@@ -198,6 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99955e5241e44c34ea10ef2151a88d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  i_ID: 0
   sr_FillCloud: {fileID: 212422792036379352}
   f_WaterVolume: 0
   f_Mass: 1
