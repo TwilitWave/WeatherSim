@@ -1,4 +1,4 @@
-﻿Shader "Unlit/PaperEffect"
+﻿Shader "Custom/PaperEffect"
 {
 	Properties
 	{
@@ -7,11 +7,13 @@
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Opaque" }
+		Tags { "Queue" = "Transparent" }
 		LOD 100
 
 		Pass
 		{
+			Blend SrcAlpha OneMinusSrcAlpha
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -31,7 +33,7 @@
 			};
 
 			sampler2D _MainTex;
-			sampler2D _PapterTex;
+			sampler2D _PaperTex;
 			
 			v2f vert (appdata v)
 			{
@@ -45,7 +47,7 @@
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
 				fixed4 dist = tex2D(_PaperTex, i.uv);
-				return col;
+				return col * dist;
 			}
 			ENDCG
 		}
