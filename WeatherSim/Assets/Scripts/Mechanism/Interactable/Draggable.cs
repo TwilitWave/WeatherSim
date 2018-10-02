@@ -1,18 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Draggable : Interactable {
     
     // To check if this object is scalable
     [Header("Scale function")]
     public bool b_CanScaleUp;
-    public bool b_canMove;
     public float f_scaleThreshold = 2f;
     public float[] fa_scaleClamp = {0.8f, 1.2f};
-    public UnityAction<float> OnScaleUp;
-    public UnityAction<float> OnScaleDown;
+
+    public bool b_canMove;
     float f_currDist;
     float f_preDist;
 
@@ -32,7 +30,6 @@ public class Draggable : Interactable {
         Vector3 pos = Camera.main.ScreenToWorldPoint(v_onScreenPos[0]);
 
         v_diff = new Vector3(pos.x, pos.y,0) - transform.position;
-        
     }
 
     // Update is called once per frame
@@ -71,30 +68,34 @@ public class Draggable : Interactable {
                     {
                         float speed = delta - f_scaleThreshold;
                         // scale up
-                        OnScaleUp.Invoke(speed);
+                        if(transform.localScale.x < fa_scaleClamp[1])
+                        {
+                            transform.localScale = new Vector3(transform.localScale.x + (speed * Time.deltaTime), transform.localScale.y + (speed * Time.deltaTime), 1);
+                        }
+                        else
+                        {
+                            transform.localScale = new Vector3(fa_scaleClamp[1], fa_scaleClamp[1], 1);
+                        }
                     }
                     if (delta < 0 && delta < -f_scaleThreshold)
                     {
                         float speed = delta + f_scaleThreshold;
-                        // scale down
-                        OnScaleDown.Invoke(speed);
 
+                        if (transform.localScale.x > fa_scaleClamp[0])
+                        {
+                            transform.localScale = new Vector3(transform.localScale.x + (speed * Time.deltaTime), transform.localScale.y + (speed * Time.deltaTime), 1);
+                        }
+                        else
+                        {
+                            transform.localScale = new Vector3(fa_scaleClamp[0], fa_scaleClamp[0], 1);
+                        }
                     }
-                }
-                else
-                {
-                    f_preDist = 0;
-                    f_currDist = 0;
                 }
 
             
             }
 
         }
-        else
-        {
-            f_preDist = 0;
-            f_currDist = 0;
-        }
+        
     }
 }
