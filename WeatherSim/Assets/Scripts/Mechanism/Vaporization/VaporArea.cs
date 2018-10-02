@@ -5,13 +5,13 @@ using UnityEngine;
 public class VaporArea : MonoBehaviour {
 
     ParticleSystem particleVFX;
-    ParticleSystem.MainModule _main;
+    ParticleSystem.EmissionModule _main;
     List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
 
     // Use this for initialization
     void Start() {
         particleVFX = GetComponent<ParticleSystem>();
-        _main = particleVFX.main;
+        _main = particleVFX.emission;
 
     }
 
@@ -21,7 +21,7 @@ public class VaporArea : MonoBehaviour {
     }
     public void SetEnegry(float _partLife_percent)
     {
-        _main.startLifetime = _partLife_percent;
+        _main.rateOverTime = _partLife_percent;
     }
 
     void OnParticleCollision(GameObject other)
@@ -35,7 +35,8 @@ public class VaporArea : MonoBehaviour {
         {
             if (receiver)
             {
-                if (receiver.OnParticleCollided != null)
+                if (receiver.OnParticleCollided != null 
+                    && receiver.name.Substring(receiver.name.Length-1).Equals(transform.parent.parent.name.Substring(transform.parent.parent.name.Length-1)))
                     receiver.OnParticleCollided.Invoke();
             }
             i++;

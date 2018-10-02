@@ -12,7 +12,7 @@ public class VaporManager : MonoBehaviour {
         }
     }
     int[] ia_enegryClamp = { 10, 100 };
-    float[] fa_particleLifeTime = { 1f, 5f };
+    float[] fa_EmmisionRate = { 2f, 20f };
     float[] fa_sunRayLifeTime = { 1f, 2f };
     [Range(10,100)]
     public float f_energy = 10;
@@ -38,20 +38,16 @@ public class VaporManager : MonoBehaviour {
         // vapor area
         foreach (var item in lists)
         {
-            item.SetEnegry(ratio*(fa_particleLifeTime[1] - fa_particleLifeTime[0]) + fa_particleLifeTime[0]);
+            item.SetEnegry(ratio*(fa_EmmisionRate[1] - fa_EmmisionRate[0]) + fa_EmmisionRate[0]);
         }
         // sun ray
         sun_main.startLifetime = ratio * (fa_sunRayLifeTime[1] - fa_sunRayLifeTime[0]) + fa_sunRayLifeTime[0];
 
     }
 
-    public void ModifyEnergy(float _speed)
+    public void ModifyEnergy(float _ratio)
     {
 
-        f_energy += _speed * Time.deltaTime;
-        if (f_energy > 100)
-            f_energy = 100;
-        if (f_energy < 10)
-            f_energy = 10;
+        f_energy = (ia_enegryClamp[1] - ia_enegryClamp[0]) * _ratio + ia_enegryClamp[0];
     }
 }
