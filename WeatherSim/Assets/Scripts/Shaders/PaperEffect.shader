@@ -47,6 +47,7 @@
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
 				fixed4 dist = tex2D(_PaperTex, i.uv);
+
 				return col * dist;
 			}
 			ENDCG
