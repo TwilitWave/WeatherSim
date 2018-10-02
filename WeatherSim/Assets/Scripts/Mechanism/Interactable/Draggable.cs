@@ -77,7 +77,7 @@ public class Draggable : Interactable {
                     {
                         float speed = delta + f_scaleThreshold;
                         // scale down
-                        OnScaleDown.Invoke(speed);
+                        OnScaleDown.Invoke(speed*3f);
 
                     }
                 }

@@ -17,7 +17,7 @@ public class VaporManager : MonoBehaviour {
     [Range(10,100)]
     public float f_energy = 10;
     [SerializeField] ParticleSystem sunRay;
-    [SerializeField] Draggable theSun;
+
     ParticleSystem.MainModule sun_main;
     List<VaporArea> lists = new List<VaporArea>();
 	// Use this for initialization
@@ -28,8 +28,7 @@ public class VaporManager : MonoBehaviour {
             lists.Add(transform.GetChild(i).GetChild(0).GetChild(0).GetComponent<VaporArea>());
         }
         Debug.Log(lists.Count);
-        theSun.OnScaleUp += ModifyEnergy;
-        theSun.OnScaleDown += ModifyEnergy;
+
     }
 	
 	// Update is called once per frame

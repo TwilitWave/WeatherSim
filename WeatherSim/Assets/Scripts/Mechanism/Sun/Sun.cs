@@ -3,32 +3,59 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Sun : MonoBehaviour {
-    [SerializeField] float[] fa_scaleClamp;
-    [SerializeField] float[] fa_heightClamp;
-    [SerializeField] float f_buffer;
-    private float f_scale;
-    private float f_yPercent;
 
+
+   [SerializeField] Sprite[] sun_moon;
+    SpriteRenderer sun_sprite;
+    float f_angle = 53;
+    // There are 5 levels
+    [SerializeField] float[] fa_rotSpdLevel = {0.1f ,0.5f,1f,2f,3f,10f };
+   [SerializeField] float f_rotSpeed;
+    public bool b_IsPaused;
+    public bool b_AtNight;
+    int i_currentSpd = 5;
     // Use this for initialization
     void Start () {
-		
+        sun_sprite = transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
+        f_rotSpeed = fa_rotSpdLevel[i_currentSpd];
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        f_yPercent = 1- (transform.position.y - fa_heightClamp[1]) / (fa_heightClamp[0] - fa_heightClamp[1]);
-        f_scale = f_yPercent * (fa_scaleClamp[1] - fa_scaleClamp[0]) + fa_scaleClamp[0];
-        transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * f_scale, 10 * Time.deltaTime);
+        if (!b_IsPaused)
+        {
+            
+            transform.Rotate(new Vector3(0, 0, 1), f_rotSpeed * Time.deltaTime);
+            float deltaAngle = Mathf.Abs(transform.rotation.z);
 
-        float pos = transform.position.y;
-        pos = Mathf.Clamp(pos, fa_heightClamp[1], fa_heightClamp[0]);
-        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, pos, transform.position.z), Time.deltaTime);
+            // from left to right
+            if(transform.rotation.eulerAngles.z >= f_angle && transform.rotation.eulerAngles.z < 360- f_angle)
+            {
+                Debug.Log(deltaAngle);
+                transform.rotation = Quaternion.Euler(0, 0, -f_angle);
+                b_AtNight = !b_AtNight;
+                sun_sprite.sprite = sun_moon[b_AtNight ? 1 : 0];
+                sun_sprite.transform.parent.GetChild(b_AtNight ? 1 : 2).gameObject.SetActive(false);
+                sun_sprite.transform.parent.GetChild(b_AtNight ? 2 : 1).gameObject.SetActive(true);
 
-        if (transform.position.y > fa_heightClamp[0] + f_buffer)
-            transform.position = new Vector3(transform.position.x, fa_heightClamp[0]  + f_buffer, transform.position.z);
-        if (transform.position.y < fa_heightClamp[1] - f_buffer)
-            transform.position = new Vector3(transform.position.x, fa_heightClamp[1] - f_buffer, transform.position.z);
+            }
+        }
+    }
 
+    public void SpeedUp()
+    {
+        i_currentSpd++;
+        if (i_currentSpd >= fa_rotSpdLevel.Length)
+            i_currentSpd = fa_rotSpdLevel.Length-1;
+        f_rotSpeed = fa_rotSpdLevel[i_currentSpd];
+
+    }
+    public void SpeedDown()
+    {
+        i_currentSpd--;
+        if (i_currentSpd < 0)
+            i_currentSpd = 0;
+        f_rotSpeed = fa_rotSpdLevel[i_currentSpd];
 
     }
 }
