@@ -118,8 +118,7 @@ public class Cloud : MonoBehaviour
                 }
                 else
                 {
-                    b_CanRain = true;
-                    rainVFX.SetActive(true);
+                    CanRain();
                 }
             }
         }
@@ -154,6 +153,14 @@ public class Cloud : MonoBehaviour
         b_cloudDie = true;
         StartCoroutine(IEDissipate());
     }
+    public void CanRain()
+    {
+        if(f_WaterVolume > f_CloudFullVolume)
+        {
+            b_CanRain = true;
+            rainVFX.SetActive(true);
+        }
+    }
 
     void Dissipate()
     {
@@ -176,6 +183,7 @@ public class Cloud : MonoBehaviour
         transform.localScale = Vector3.one * 0.01f;
         sr_bgSprite.color = Color.white;
         sr_FillCloud.material.SetColor("_Tint", Color.white);
+        rainVFX.gameObject.SetActive(false);
         f_WaterVolume = 0;
         f_vertSpd = 0;
         b_cloudDie = false;

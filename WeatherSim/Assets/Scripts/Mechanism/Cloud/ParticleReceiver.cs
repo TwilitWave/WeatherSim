@@ -14,5 +14,9 @@ public class ParticleReceiver : MonoBehaviour {
         {
             transform.GetChild(0).GetComponent<Cloud>().CloudDie();
         }
+        if (collision.transform.name.Equals("CloudRainArea"))
+        {
+            transform.GetChild(0).GetComponent<Cloud>().CanRain();
+        }
     }
 }
