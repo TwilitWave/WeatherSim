@@ -162,6 +162,7 @@ public class Cloud : MonoBehaviour
             Color temp = sr_bgSprite.color;
             temp.a -= Time.deltaTime;
             sr_bgSprite.color = temp;
+             sr_FillCloud.material.SetColor("_Tint", temp);
         }
     }
     IEnumerator IEDissipate()
@@ -173,6 +174,8 @@ public class Cloud : MonoBehaviour
     public void Reset()
     {
         transform.localScale = Vector3.one * 0.01f;
+        sr_bgSprite.color = Color.white;
+        sr_FillCloud.material.SetColor("_Tint", Color.white);
         f_WaterVolume = 0;
         f_vertSpd = 0;
         b_cloudDie = false;

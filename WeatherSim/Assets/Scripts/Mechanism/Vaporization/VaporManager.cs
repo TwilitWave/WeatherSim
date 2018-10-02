@@ -6,7 +6,7 @@ public class VaporManager : MonoBehaviour {
     int[] ia_enegryClamp = { 10, 100 };
     float[] fa_particleLifeTime = { 1f, 5f };
     [Range(10,100)]
-    [SerializeField] float f_energy;
+    public float f_energy;
     List<VaporArea> lists = new List<VaporArea>();
 	// Use this for initialization
 	void Start () {
