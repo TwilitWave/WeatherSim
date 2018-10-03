@@ -11,9 +11,9 @@ public class Cloud : MonoBehaviour
     [Header("Cloud Property")]
     // mass could be the size of the could
     public float f_Mass;
-    public float f_AirDrag = 1f;
+
     public float f_MaxSpeed;
-    [SerializeField] float f_vertSpd;
+
 
     [Header("Cloud Grow")]
     public bool b_IsCloudFull;
@@ -46,51 +46,24 @@ public class Cloud : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int dir = WindManager.instance.direction;
-        if (WindManager.instance.b_blowing)
-        {
-            f_vertSpd += dir * (WindManager.instance.Scale) * Time.deltaTime;
-        }
-
-        if (f_vertSpd > 0.01f || f_vertSpd < -0.01f)
-        {
-            f_vertSpd += -dir * f_AirDrag * Time.deltaTime;
-
-            if (f_vertSpd > f_MaxSpeed)
-                f_vertSpd = f_MaxSpeed;
-            if (f_vertSpd < -f_MaxSpeed)
-                f_vertSpd = -f_MaxSpeed;
-            if (dir > 0 && f_vertSpd < 0)
-                f_vertSpd = 0;
-            if (dir < 0 && f_vertSpd > 0)
-                f_vertSpd = 0;
-
-            transform.parent.position += new Vector3(f_vertSpd * Time.deltaTime, 0, 0);
-        }
-        else
-        {
-            f_vertSpd = 0;
-        }
-
-     //   GrowUp(1);
         Rain();
         Dissipate();
     }
-    public void InitCloud(Sprite _sprite)
+    public void InitCloud(Sprite _sprite, Vector3 _pos)
     {  
         sr_bgSprite.sprite = _sprite;
         sr_FillCloud.sprite = _sprite;
 
         transform.parent.GetComponent<BoxCollider2D>().size = new Vector2(_sprite.rect.width*1.7f/280f, transform.parent.GetComponent<BoxCollider2D>().size.y);
 
-        transform.parent.position = new Vector3(12, Random.Range(1.2f,3.4f), 0);
+        transform.parent.position = new Vector3(_pos.x, _pos.y + Random.Range(-1.5f,1), 0);
         //transform.localPosition = Vector3.zero;
-
+        transform.parent.gameObject.layer = LayerMask.NameToLayer("Cloud_" + i_ID);
 
     }
-    public void MoveSlightly()
+    public void MoveCloud(float _speed)
     {
-        transform.parent.position += new Vector3(-0.5f,0,0) * Time.deltaTime;
+        transform.position += new Vector3(_speed, 0, 0) * Time.deltaTime;
     }
 
     public void GrowUp(float f_speed)
@@ -185,7 +158,7 @@ public class Cloud : MonoBehaviour
         sr_FillCloud.material.SetColor("_Tint", Color.white);
         rainVFX.gameObject.SetActive(false);
         f_WaterVolume = 0;
-        f_vertSpd = 0;
+
         b_cloudDie = false;
         b_IsCloudFull = false;
         b_isRaining = false;

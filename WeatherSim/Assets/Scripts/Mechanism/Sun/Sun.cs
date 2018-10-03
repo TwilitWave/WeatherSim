@@ -33,14 +33,17 @@ public class Sun : MonoBehaviour {
             }
             float ratio = 1- deltaAngle / f_angle;
 
+            if (!b_AtNight)
+                VaporManager.instance.ModifyEnergy(ratio);
+            else
+                VaporManager.instance.f_energy = 10;
             // from left to right
-            if(transform.rotation.eulerAngles.z >= f_angle && transform.rotation.eulerAngles.z < 360- f_angle)
+            if (transform.rotation.eulerAngles.z >= f_angle && transform.rotation.eulerAngles.z < 360- f_angle)
             {
-                Debug.Log(deltaAngle);
+               // Debug.Log(deltaAngle);
                 transform.rotation = Quaternion.Euler(0, 0, -f_angle);
                 b_AtNight = !b_AtNight;
-                if (!b_AtNight)
-                    VaporManager.instance.ModifyEnergy(ratio);
+
                 sun_sprite.sprite = sun_moon[b_AtNight ? 1 : 0];
                 sun_sprite.transform.parent.GetChild(b_AtNight ? 1 : 2).gameObject.SetActive(false);
                 sun_sprite.transform.parent.GetChild(b_AtNight ? 2 : 1).gameObject.SetActive(true);
@@ -56,6 +59,11 @@ public class Sun : MonoBehaviour {
             i_currentSpd = fa_rotSpdLevel.Length-1;
         f_rotSpeed = fa_rotSpdLevel[i_currentSpd];
 
+    }
+
+    public void StartAndPause()
+    {
+        b_IsPaused = !b_IsPaused;
     }
     public void SpeedDown()
     {

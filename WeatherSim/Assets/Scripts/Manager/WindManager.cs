@@ -2,28 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WindManager : MonoBehaviour {
+public class WindManager : MonoBehaviour
+{
     public static WindManager instance;
 
-    // If player can generate wind
     public bool b_CanGenerateWind;
-    // The direction of wind right: 1, left: -1
-    public int direction;
-    // The force of Wind
-    public float Scale;
-
-    // if there is a wind
     public bool b_blowing;
-    // The drop down speed of Scale
-    public float f_acceleraton;
 
-    
-    // The drawing hint of wind
-    LineRenderer lr_PathOfWind;
+    public float f_drag;
 
+
+    private bool b_isTapping;
+
+    private float f_currPos;
+    private float f_prevPos;
+    public float f_spd;
+
+    Vector3[] va_Diff = new Vector3[5];
+    Vector3 touchedPos = Vector3.zero;
     private void Awake()
     {
-        if(instance == null || instance != this)
+        if (instance == null || instance != this)
         {
             instance = this;
         }
@@ -31,18 +30,8 @@ public class WindManager : MonoBehaviour {
 
     private void Start()
     {
-        Scale = 0;
-        direction = 0;
-        lr_PathOfWind = transform.GetChild(0).GetComponent<LineRenderer>();
-        lr_PathOfWind.enabled = false;
-    }
 
-    public void SetWind(int direction, float Scale) {
-        b_blowing = true;
-        this.Scale = Scale;
-        this.direction = direction;
-        Debug.Log("Scale: " + Scale);
-        Debug.Log("Direction: " + direction);
+
     }
 
     private void Update()
@@ -53,54 +42,85 @@ public class WindManager : MonoBehaviour {
 
             if (touches.Count > 0)
             {
-                foreach (Touch touch in touches)
-                {
-                    Vector3 touchedPos = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, 10));
-                    RaycastHit2D hit2D = Physics2D.Raycast(touchedPos, Camera.main.transform.forward);
-                    if (hit2D.collider == null)
-                    {
-                        switch (touch.phase)
-                        {
-                            case TouchPhase.Began:
-                                {
 
-                                    lr_PathOfWind.SetPosition(0, new Vector3(Camera.main.ScreenToWorldPoint(touch.position).x, Camera.main.ScreenToWorldPoint(touch.position).y, -1));
-                                    lr_PathOfWind.enabled = true;
-                                    break;
-                                }
-                            case TouchPhase.Moved:
+                touchedPos = Camera.main.ScreenToWorldPoint(new Vector3(touches[0].position.x, touches[0].position.y, 10));
+                RaycastHit2D hit2D = Physics2D.Raycast(touchedPos, Camera.main.transform.forward);
+                ParticleReceiver temp = null;
+                if (hit2D)
+                    temp = hit2D.collider.GetComponent<ParticleReceiver>();
+                if (temp != null)
+                {
+                    switch (touches[0].phase)
+                    {
+                        case TouchPhase.Began:
+                            {
+                                f_currPos = touchedPos.x;
+                                f_prevPos = touchedPos.x;
+                                b_isTapping = true;
+                                for (int i = 0; i < va_Diff.Length; i++)
                                 {
-                                    lr_PathOfWind.SetPosition(1, new Vector3(Camera.main.ScreenToWorldPoint(touch.position).x, Camera.main.ScreenToWorldPoint(touch.position).y, -1));
-                                    break;
+                                    va_Diff[i] = CloudPool.instance.cloudList[i].transform.parent.position - touchedPos;
                                 }
-                            case TouchPhase.Ended:
-                                {
-                                    //lr_PathOfWind.enabled = false;
-                                    float delta = lr_PathOfWind.GetPosition(1).x - lr_PathOfWind.GetPosition(0).x;
-                                    // set wind
-                                    SetWind(delta > 0 ? 1 : -1, Mathf.Abs(delta));
-                                    break;
-                                }
-                            default:
+
                                 break;
-                        }
+                            }
+                        case TouchPhase.Moved:
+                            {
+                                f_prevPos = f_currPos;
+                                f_currPos = touchedPos.x;
+                                f_spd = f_currPos - f_prevPos;
+                                break;
+                            }
+                        case TouchPhase.Ended:
+                            {
+                                b_isTapping = false;
+                                // set wind
+
+                                break;
+                            }
+                        default:
+                            break;
                     }
-                   
                 }
+
+
             }
+            else
+            {
+
+                b_isTapping = false;
+
+            }
+                
+        }
+        if (b_isTapping)
+        {
+            for (int i = 0; i < va_Diff.Length; i++)
+            {
+                Vector3 newPos = touchedPos + va_Diff[i];
+                CloudPool.instance.cloudList[i].transform.parent.position = new Vector3(newPos.x, CloudPool.instance.cloudList[i].transform.parent.position.y, 0);
+            }
+
         }
 
         if (b_blowing)
         {
-            
-            Scale -= Time.deltaTime * f_acceleraton;
-            if(Scale < 0)
+            if (f_spd > 0)
             {
-                // wind stop
-                Scale = 0;
-                b_blowing = false;
-                lr_PathOfWind.enabled = false;
+                f_spd -= f_drag * Time.deltaTime;
+                
+                for (int i = 0; i < va_Diff.Length; i++)
+                {
+                    CloudPool.instance.cloudList[i].transform.parent.position += new Vector3(f_spd, 0, 0) * Time.deltaTime;
+                }
             }
+            else
+            {
+                // cloud stop
+                b_blowing = false;
+                f_spd = 0;
+            }
+
         }
     }
 }
