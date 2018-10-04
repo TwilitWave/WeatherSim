@@ -66,12 +66,15 @@ public class Sun : MonoBehaviour {
 
     public void SpeedUp()
     {
-        i_currentSpd++;
-        if (i_currentSpd >= fa_rotSpdLevel.Length)
-            i_currentSpd = fa_rotSpdLevel.Length-1;
-        f_rotSpeed = fa_rotSpdLevel[i_currentSpd];
+        if (!b_IsPaused)
+        {
+            i_currentSpd++;
+            if (i_currentSpd >= fa_rotSpdLevel.Length)
+                i_currentSpd = fa_rotSpdLevel.Length - 1;
+            f_rotSpeed = fa_rotSpdLevel[i_currentSpd];
 
-        UpdateButtonText();
+            UpdateButtonText();
+        }
     }
 
     public void StartAndPause()
@@ -81,18 +84,25 @@ public class Sun : MonoBehaviour {
         else
             UpdateButtonText();
         b_IsPaused = !b_IsPaused;
+
+
     }
     public void SpeedDown()
     {
-        i_currentSpd--;
-        if (i_currentSpd < 0)
-            i_currentSpd = 0;
-        f_rotSpeed = fa_rotSpdLevel[i_currentSpd];
-        UpdateButtonText();
+        if (!b_IsPaused)
+        {
+            i_currentSpd--;
+            if (i_currentSpd < 0)
+                i_currentSpd = 0;
+            f_rotSpeed = fa_rotSpdLevel[i_currentSpd];
+            UpdateButtonText();
+        }
+
     }
 
     void UpdateButtonText()
     {
+
         buttonText.text = "x" + fa_rotSpdLevel[i_currentSpd];
     }
 }

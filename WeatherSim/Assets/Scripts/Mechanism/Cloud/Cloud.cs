@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Cloud : MonoBehaviour
 {
+    static bool b_formCloud;
     public int i_ID;
     [SerializeField] SpriteRenderer sr_FillCloud;
    SpriteRenderer sr_bgSprite;
@@ -93,6 +94,11 @@ public class Cloud : MonoBehaviour
                 }
                 else
                 {
+                    if (!b_formCloud)
+                    {
+                        b_formCloud = true;
+                        PopUpManager.Instance.SetContent(0);
+                    }
                     CanRain();
                 }
             }

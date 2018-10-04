@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class VaporManager : MonoBehaviour {
     public static VaporManager instance;
-    bool b_sunHigh;
+
     private void Awake()
     {
         if (instance == null || instance != this)
@@ -36,11 +36,6 @@ public class VaporManager : MonoBehaviour {
 	void Update () {
         float ratio = (f_energy - ia_enegryClamp[0]) / (ia_enegryClamp[1] - ia_enegryClamp[0]);
 
-        if (!b_sunHigh && ratio > 0.9f)
-        {
-            b_sunHigh = true;
-            PopUpManager.Instance.SetContent(0);
-        }
         // vapor area
         foreach (var item in lists)
         {

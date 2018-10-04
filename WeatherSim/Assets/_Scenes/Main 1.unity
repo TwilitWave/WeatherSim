@@ -1729,6 +1729,21 @@ Prefab:
       propertyPath: Contents.Array.data[0]
       value: You reached maximum energy for evaporation
       objectReference: {fileID: 0}
+    - target: {fileID: 224762571429422556, guid: 55e7b31175114fb44866140cc462675c,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: -626
+      objectReference: {fileID: 0}
+    - target: {fileID: 224762571429422556, guid: 55e7b31175114fb44866140cc462675c,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 61.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 224762571429422556, guid: 55e7b31175114fb44866140cc462675c,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 55e7b31175114fb44866140cc462675c, type: 2}
   m_IsPrefabAsset: 0
