@@ -7,7 +7,7 @@ public class Cloud : MonoBehaviour
     public int i_ID;
     [SerializeField] SpriteRenderer sr_FillCloud;
    SpriteRenderer sr_bgSprite;
-    [SerializeField] private float f_WaterVolume;
+    [SerializeField] public float f_WaterVolume;
     [Header("Cloud Property")]
     // mass could be the size of the could
     public float f_Mass;
@@ -28,6 +28,8 @@ public class Cloud : MonoBehaviour
     private float f_rainSpeed = 0.5f;
     private bool b_isRaining;
     private bool b_cloudDie;
+
+    static bool b_firstRain;
     private void OnEnable()
     {
         sr_bgSprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -103,6 +105,12 @@ public class Cloud : MonoBehaviour
         {
             if (f_WaterVolume > f_CloudFullVolume)
             {
+                if (!b_firstRain)
+                {
+                    b_firstRain = true;
+                    // rain achiement
+                    PopUpManager.Instance.SetContent(1);
+                }
 
                 f_WaterVolume -= f_rainSpeed;
                 float ratio = 1 - (f_RainFullVolume - f_WaterVolume) / (f_RainFullVolume - f_CloudFullVolume);

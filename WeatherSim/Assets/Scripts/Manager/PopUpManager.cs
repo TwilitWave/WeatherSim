@@ -17,6 +17,7 @@ public class PopUpManager : MonoBehaviour {
     private bool is_alive;
     private float currenttime;
     private int unlocked = 0;
+
     private void Awake()
     {
         if (Instance == null) {
