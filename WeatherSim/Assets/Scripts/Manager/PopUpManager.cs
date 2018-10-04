@@ -26,8 +26,8 @@ public class PopUpManager : MonoBehaviour {
         is_alive = false;
     }
     public void SetContent(int index) {
-        Text temt = Achievements[unlocked].GetComponentInChildren<Text>();
-        Image temi = Achievements[unlocked].GetComponentInChildren<Image>();
+        Text temt = Achievements[index].GetComponentInChildren<Text>();
+        Image temi = Achievements[index].GetComponentInChildren<Image>();
         this.Panel.SetActive(true);
         this.Title.text = Titles[index];
         temt.text = Titles[index];
@@ -40,7 +40,7 @@ public class PopUpManager : MonoBehaviour {
     }
     void Start()
     {
-        SetContent(1);
+        SetContent(0);
     }
     // Use this for initialization	
     // Update is called once per frame
