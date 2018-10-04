@@ -38,11 +38,17 @@ public class Sun : MonoBehaviour {
                 deltaAngle = 360 -deltaAngle;
             }
             float ratio = 1- deltaAngle / f_angle;
-            effect.SunPosition = ratio;
+            
             if (!b_AtNight)
+            {
                 VaporManager.instance.ModifyEnergy(ratio);
+                effect.SunPosition = ratio * 3 > 1 ? 1 : ratio * 3;
+            }
             else
+            {
                 VaporManager.instance.f_energy = 10;
+                effect.SunPosition = 0;
+            }
             // from left to right
             if (transform.rotation.eulerAngles.z >= f_angle && transform.rotation.eulerAngles.z < 360- f_angle)
             {
