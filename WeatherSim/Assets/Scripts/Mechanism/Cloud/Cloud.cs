@@ -82,6 +82,11 @@ public class Cloud : MonoBehaviour
             else
             {
                 b_IsCloudFull = true;
+                if (!b_formCloud)
+                {
+                    b_formCloud = true;
+                    PopUpManager.Instance.SetContent(0);
+                }
             }
             if (b_IsCloudFull && !b_CanRain)
             {
@@ -94,11 +99,7 @@ public class Cloud : MonoBehaviour
                 }
                 else
                 {
-                    if (!b_formCloud)
-                    {
-                        b_formCloud = true;
-                        PopUpManager.Instance.SetContent(0);
-                    }
+
                     CanRain();
                 }
             }
