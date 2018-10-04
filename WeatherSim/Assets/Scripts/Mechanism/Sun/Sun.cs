@@ -17,6 +17,7 @@ public class Sun : MonoBehaviour {
     public bool b_AtNight;
     int i_currentSpd = 3;
     [SerializeField] float f_baseSpeed = 1;
+    [SerializeField] DayNightEffect effect;
     // Use this for initialization
     void Start () {
         sun_sprite = transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
@@ -37,7 +38,7 @@ public class Sun : MonoBehaviour {
                 deltaAngle = 360 -deltaAngle;
             }
             float ratio = 1- deltaAngle / f_angle;
-
+            effect.SunPosition = ratio;
             if (!b_AtNight)
                 VaporManager.instance.ModifyEnergy(ratio);
             else

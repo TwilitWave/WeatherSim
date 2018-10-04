@@ -41,7 +41,7 @@ public class PopUpManager : MonoBehaviour {
     }
     void Start()
     {
-        SetContent(0);
+        
     }
     // Use this for initialization	
     // Update is called once per frame

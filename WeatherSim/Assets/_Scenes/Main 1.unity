@@ -1606,7 +1606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DayColor: {r: 0.58, g: 0.4750784, b: 0.16645996, a: 0}
-  NightColor: {r: 0.12386441, g: 0.12730508, b: 0.203, a: 0.7254902}
+  NightColor: {r: 0.12386441, g: 0.12730508, b: 0.203, a: 0.48235294}
   SunPosition: 1
 --- !u!1 &548584770
 GameObject:
@@ -2150,6 +2150,11 @@ Prefab:
       propertyPath: buttonText
       value: 
       objectReference: {fileID: 1992839011}
+    - target: {fileID: 114306160449602596, guid: 2511560683325d642bc6f67af02238b0,
+        type: 2}
+      propertyPath: effect
+      value: 
+      objectReference: {fileID: 519420034}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2511560683325d642bc6f67af02238b0, type: 2}
   m_IsPrefabAsset: 0
@@ -3359,7 +3364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.59607846}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
